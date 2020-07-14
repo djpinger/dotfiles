@@ -4,6 +4,7 @@ export PATH=~/.rbenv/shims:$PATH
 export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
 [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+source $(which assume-role)
 export PS1='\[\033[01;30m\]\h\[\033[35m\] \u\[\033[01;34m\] \w\[\033[0;32m\] \n>\[\033[00m\] '
 export EDITOR=/usr/bin/vim
 export BLOCKSIZE=1k
