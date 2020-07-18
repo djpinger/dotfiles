@@ -5,16 +5,27 @@ export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
 [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 source $(which assume-role)
+export NVM_DIR="$HOME/.nvm"
+[ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && . "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 export PS1='\[\033[01;30m\]\h\[\033[35m\] \u\[\033[01;34m\] \w\[\033[0;32m\] \n>\[\033[00m\] '
 export EDITOR=/usr/bin/vim
 export BLOCKSIZE=1k
 export CLICOLOR=1
 export LSCOLORS=ExFxBxDxCxegedabagacad
+## aws-vault
+#export AWS_VAULT_BACKEND=pass
+export AWS_VAULT_PROMPT=terminal
+#export AWS_VAULT_PASS_PASSWORD_STORE_DIR=~/src/pass
+#export AWS_VAULT_PASS_PREFIX=av/
+export AWS_SESSION_TOKEN_TTL=12h
+export AWS_CHAINED_SESSION_TOKEN_TTL=12h
+export AWS_ASSUME_ROLE_TTL=12h
+export AWS_FEDERATION_TOKEN_TTL=12h
 #Powerline
 function _update_ps1() {
     PS1=$(powerline-shell $?)
 }
-
 if [[ $TERM != linux && ! $PROMPT_COMMAND =~ _update_ps1 ]]; then
     PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
 fi
@@ -57,3 +68,8 @@ alias dcdestroy='docker-compose stop && docker-compose rm -f'
 alias dcps='docker-compose ps'
 alias dclogs='docker-compose logs -f'
 alias ls='exa'
+alias av='aws-vault'
+alias ave='aws-vault exec'
+alias ar='assume-role'
+alias tmc='tmux -CC'
+alias tma='tmux -CC attach'

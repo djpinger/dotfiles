@@ -6,8 +6,9 @@
     "git",
     "cwd",
     "hg",
-    "jobs",
     "newline",
-    "root"
+    "root",
+    "~/.powerline/aws_env.py",
+    "~/.powerline/aws_role.py"
   ]
 }
