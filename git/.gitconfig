@@ -3,8 +3,8 @@
 [color]
     ui = true
 [core]
-    excludesfile = /Users/paulseymour/.gitignore_global
-    hooksPath = /Users/paulseymour/.git_hooks
+    excludesfile = ~/.gitignore_global
+    hooksPath = ~/.git_hooks
 [user]
     name = Paul Seymour
     email = paul.seymour@arcadia.com

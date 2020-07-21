@@ -22,6 +22,7 @@ else
         brew upgrade ansible
 fi
 
+[ -f ~/.ssh ] && mkdir ~/.ssh
 brew bundle --file=brew/Brewfile
 stow bash
 stow git
