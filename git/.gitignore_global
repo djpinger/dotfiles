@@ -1,0 +1,12 @@
+.DS_Store
+terraform.tfstate*
+*.terraform
+plan
+*.retry
+*.idea
+*.war
+*.swp
+*/.idea/*
+compiler.xml
+misc.xml
+.env
