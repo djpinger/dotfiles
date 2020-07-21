@@ -28,7 +28,6 @@ stow git
 stow ssh
 stow tmux
 stow vim
-stow powerline
 ./iterm2_setup.sh
 ansible-playbook -i "localhost," -c local ansible/bashrc.yml
 $(brew --prefix)/opt/fzf/install
