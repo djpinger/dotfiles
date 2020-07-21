@@ -1,123 +1,106 @@
-# Begin Profiling Code Block
+#
+# MAIN
+#
+#Begin Profiling Code Block
 #PS4='+ $(date "+%s.%N")\011 '
 #exec 3>&2 2>/tmp/bashstart.$$.log
 #set -x
-
-[[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
-
-export EDITOR=vim
-export PATH="~/bin:~/.rbenv/shims:/usr/local/bin:~/bin:/usr/local/Cellar:/usr/local/opt/coreutils/libexec/gnubin:/usr/local/opt/gnu-sed/libexec/gnubin:/usr/local/sbin:$PATH"
-
+export PATH=~/.rbenv/shims:~/bin:/usr/local/opt/terraform@0.11/bin:/usr/local/bin:/usr/local/sbin:~/bin:/usr/local/Cellar:$PATH
+eval `keychain --eval --agents ssh --inherit any id_rsa`
+[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
-[ -f ~/.forgit/forgit.plugin.zsh ] && source ~/.forgit/forgit.plugin.zsh
-
-HISTCONTROL=ignoredups:ignorespace
-shopt -s histappend
-HISTSIZE=10000
-HISTFILESIZE=20000
-shopt -s checkwinsize
-export LESSOPEN="|/usr/local/bin/lesspipe.sh %s" LESS_ADVANCED_PREPROCESSOR=1
-if [ -x /usr/local/opt/coreutils/libexec/gnubin/dircolors ]; then
+if [ -x /usr/bin/dircolors  ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
     #alias ls='ls --color=auto'
     #alias dir='dir --color=auto'
     #alias vdir='vdir --color=auto'
-
     alias grep='grep --color=auto'
     alias fgrep='fgrep --color=auto'
     alias egrep='egrep --color=auto'
 fi
-
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
-
-# Alias definitions.
-
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
-
+#
+# EXPORTS
+#
+export EDITOR=vim
+export PS1='\[\033[01;30m\]\h\[\033[35m\] \u\[\033[01;34m\] \w\[\033[0;32m\] \n>\[\033[00m\] '
+export BLOCKSIZE=1k
 export CLICOLOR=1
-export LSCOLORS=ExFxCxDxBxegedabagacad
-
-alias bazaar='mount_smbfs //paul.seymour@tiger.invincea.local/Bazaar ~/Volumes/Bazaar'
-alias beaver='mount_smbfs //paul.seymour@badger.invincea.local/Builds ~/Volumes/Beaver'
-alias minip='mount_smbfs //paul.seymour@nas-manatee.invincea.local/engineering/IMS_LNP_Data ~/Volumes/MiniP'
-alias ova='mount_smbfs //paul.seymour@nas-manatee.invincea.local/engineering/OVA ~/Volumes/OVA'
-alias filer='mount_smbfs //paulseymour@fax-filer1.green.sophos/Engineering ~/Volumes/Filer'
-alias imsbuilds='mount_smbfs //paul.seymour@badger.invincea.local/Builds/IMS /mnt/ims_builds'
-
-eval `keychain --eval --agents ssh --inherit any id_rsa novakeys/awsnovakey`
-
-function port {
-    sudo lsof -iTCP:$1 -sTCP:LISTEN
+export LSCOLORS=ExFxBxDxCxegedabagacad
+export JAVA_HOME="$(/usr/libexec/java_home -v 1.8)"
+export GOPATH=$HOME/go/
+export PATH=$PATH:$GOPATH/bin
+#
+# RUBY
+#
+export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
+#
+# NODE
+#
+export NVM_DIR="$HOME/.nvm"
+[ -s "/usr/local/opt/nvm/nvm.sh" ] && . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && . "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+#
+# AWS
+#
+source $(which assume-role)
+export AWS_VAULT_PROMPT=terminal
+export AWS_SESSION_TOKEN_TTL=12h
+export AWS_CHAINED_SESSION_TOKEN_TTL=12h
+export AWS_ASSUME_ROLE_TTL=12h
+export AWS_FEDERATION_TOKEN_TTL=12h
+#
+# POWERLINE
+#
+function _update_ps1() {
+    PS1=$(powerline-shell $?)
 }
-
-function gitupstream {
-    BRANCH=$(git rev-parse --abbrev-ref HEAD)
-    git branch --set-upstream-to=origin/$BRANCH $BRANCH
-}
-
-function extract {
- if [ -z "$1" ]; then
-    # display usage if no parameters given
-    echo "Usage: extract <path/file_name>.<zip|rar|bz2|gz|tar|tbz2|tgz|Z|7z|xz|ex|tar.bz2|tar.gz|tar.xz>"
-    echo "       extract <path/file_name_1.ext> [path/file_name_2.ext] [path/file_name_3.ext]"
-    return 1
- else
-    for n in $@
-    do
-      if [ -f "$n" ] ; then
-          case "${n%,}" in
-            *.tar.bz2|*.tar.gz|*.tar.xz|*.tbz2|*.tgz|*.txz|*.tar) 
-                         tar xvf "$n"       ;;
-            *.lzma)      unlzma ./"$n"      ;;
-            *.bz2)       bunzip2 ./"$n"     ;;
-            *.rar)       unrar x -ad ./"$n" ;;
-            *.gz)        gunzip ./"$n"      ;;
-            *.zip)       unzip ./"$n"       ;;
-            *.z)         uncompress ./"$n"  ;;
-            *.7z|*.arj|*.cab|*.chm|*.deb|*.dmg|*.iso|*.lzh|*.msi|*.rpm|*.udf|*.wim|*.xar)
-                         7z x ./"$n"        ;;
-            *.xz)        unxz ./"$n"        ;;
-            *.exe)       cabextract ./"$n"  ;;
-            *)
-                         echo "extract: '$n' - unknown archive method"
-                         return 1
-                         ;;
-          esac
-      else
-          echo "'$n' - file does not exist"
-          return 1
-      fi
-    done
+if [[ $TERM != linux && ! $PROMPT_COMMAND =~ _update_ps1 ]]; then
+    PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
 fi
-}
-
-function hopper {
-  if [ -z "$1" ]; then
-    echo "Please pass an environment [dev, qa, prod]"
-    return 1
-  else
-    ssh hopper-$1.cloud.sophos
-  fi
-}
-
-function gcb {
-  if [ -z "$1" ]; then
-    echo "Please enter branch name to create"
-    return 1
-  else
-    git checkout -b "$1"
-    git push -u origin "$1"
-  fi
-}
-
+#
+# ALIASES
+#
+alias qfind="find . -name "                       # qfind:    Quickly search for file
+alias myip='curl ip.appspot.com'                  # myip:         Public facing IP Address
+alias netCons='lsof -i'                           # netCons:      Show all open TCP/IP sockets
+alias flushDNS='dscacheutil -flushcache'          # flushDNS:     Flush out the DNS Cache
+alias lsock='sudo /usr/sbin/lsof -i -P'           # lsock:        Display open sockets
+alias lsockU='sudo /usr/sbin/lsof -nP | grep UDP' # lsockU:       Display only open UDP sockets
+alias lsockT='sudo /usr/sbin/lsof -nP | grep TCP' # lsockT:       Display only open TCP sockets
+alias ipInfo0='ipconfig getpacket en0'            # ipInfo0:      Get info on connections for en0
+alias ipInfo1='ipconfig getpacket en1'            # ipInfo1:      Get info on connections for en1
+alias openPorts='sudo lsof -i | grep LISTEN'      # openPorts:    All listening connections
+alias showBlocked='sudo ipfw list'                # showBlocked:  All ipfw rules inc/ blocked IPs
+if [ -x /usr/bin/dircolors  ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    #alias ls='ls --color=auto'
+    #alias dir='dir --color=auto'
+    #alias vdir='vdir --color=auto'
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
+fi
+alias ll='ls -alF'
+alias la='ls -hA'
+alias l='ls -CF'
 alias vi='vim'
-alias subl='/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl'
-alias mvim='mvim --remote-tab-silent'
 alias nomore='find ./ -iname .DS_Store -delete'
-alias wh='curl http://wttr.in/manassas_park'
-alias w='curl http://wttr.in'
+alias ls='exa'
+alias av='aws-vault'
+alias ave='aws-vault exec'
+alias ar='assume-role'
+alias tmc='tmux -CC'
+alias tma='tmux -CC attach'
+
+alias gprune='git gc --prune=now'
+alias gcd='git fetch && git checkout develop && git pull'
+alias gcm='git fetch && git checkout master && git pull'
+alias gbclean='git branch | grep -v '^*' | grep -v "master" | grep -v "develop" | xargs git branch -D'
+alias gp='git pull'
+alias gitgraph='git log --graph --abbrev-commit --pretty=oneline origin..master'
 
 alias dcup='docker-compose up -d'
 alias dcstop='docker-compose stop'
@@ -128,51 +111,22 @@ alias dcbuild='docker-compose build'
 alias dcvi='vi docker-compose.yml'
 alias dcpull='docker-compose pull'
 alias dc='docker-compose'
-alias dcn='docker-compose -f nova-compose.yml'
-
-alias gprune='git gc --prune=now'
-alias gcd='git fetch && git checkout develop && git pull'
-alias gcm='git fetch && git checkout master && git pull'
-alias gbclean='git branch | grep -v '^*' | grep -v "master" | grep -v "develop" | xargs git branch -D'
-alias gp='git pull'
-
-export CLICOLOR=1
-export LSCOLORS=ExFxCxDxBxegedabagacad
-alias pair="echo 'NO PAIR FOR YOU'"
-alias gw='./gradlew'
-alias gew='./gradlew clean build -x check'
-alias cmgew='./gradlew va-manager-applications:certificate-manager:clean && ./gradlew va-manager-applications:certificate-manager:bootRepackage && cp va-manager-applications/certificate-manager/build/libs/certificate-manager-local.jar ~/g/nova/certificate-manager/certificate-manager-local.jar'
-alias gitgraph='git log --graph --abbrev-commit --pretty=oneline origin..master'
-alias tftest='export TF_LOG=TRACE; terraform plan -out plan' 
-alias ls='exa --color-scale'
-alias lss='ls -l `find . -maxdepth 1 -type l -print`'
-alias releasedate='date +"%Y.%V"'
-
-# Power line - install with `pip install powerline-shell`
-function _update_ps1() {
-    PS1=$(powerline-shell $?)
+#
+# FUNCTIONS
+#
+ff () { /usr/bin/find . -name "$@" ; }      # ff:       Find file under the current directory
+ffs () { /usr/bin/find . -name "$@"'*' ; }  # ffs:      Find file whose name starts with a given string
+ffe () { /usr/bin/find . -name '*'"$@" ; }  # ffe:      Find file whose name ends with a given string
+ww () { /usr/bin/curl http://wttr.in/"$@" ; }
+function gcb {
+  if [ -z "$1" ]; then
+    echo "Please enter branch name to create"
+    return 1
+  else
+    git checkout -b "$1"
+    git push -u origin "$1"
+  fi
 }
-
-if [[ $TERM != linux && ! $PROMPT_COMMAND =~ _update_ps1 ]]; then
-    PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
-fi
-# END Power line
-
-# Only load Liquid Prompt in interactive shells, not from a script or from scp
-#[[ $- = *i* ]] && source ~/Workspace/liquidprompt/liquidprompt
-#LP_PS1_POSTFIX="\n> "
-# END Liquid Prompt
-
-export JAVA_HOME="$(/usr/libexec/java_home -v 1.8)"
-
-export GOPATH=$HOME/go/
-export PATH=$PATH:$GOPATH/bin
-
-# Terraform using docker
-TF_11="hashicorp/terraform:0.11.8"
-TF_12="hashicorp/terraform:latest"
-alias td11='docker run -it --rm -v $(pwd):/workpace -v $HOME/downloads:/root/.aws -w /workpace ${TF_11}'
-alias td12='docker run -it --rm -v $(pwd):/workpace -v $HOME/downloads:/root/.aws -w /workpace ${TF_12}'
 
 # End Profiling Code Block
 #set +x
