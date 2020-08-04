@@ -30,3 +30,5 @@ Plug 'hashivim/vim-terraform'
 Plug 'scrooloose/nerdtree'
 call plug#end()
 nnoremap -gblame ma:%!git blame % 2>/dev/null`a
+map <F2> :NERDTreeToggle<CR>
+map <F3> :NERDTreeFocus<CR>
