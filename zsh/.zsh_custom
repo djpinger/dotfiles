@@ -1,10 +1,6 @@
 #
 # MAIN
 #
-#Begin Profiling Code Block
-#PS4='+ $(date "+%s.%N")\011 '
-#exec 3>&2 2>/tmp/bashstart.$$.log
-#set -x
 export PATH=~/.rbenv/shims:~/bin:/usr/local/opt/terraform@0.11/bin:/usr/local/bin:/usr/local/sbin:~/bin:/usr/local/Cellar:/usr/local/opt/coreutils/libexec/gnubin:$PATH
 eval `keychain --eval --agents ssh --inherit any id_rsa pauls.pem`
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
@@ -40,12 +36,13 @@ export NVM_DIR="$HOME/.nvm"
 #
 # AWS
 #
-source $(which assume-role)
+#source $(which assume-role)
 export AWS_VAULT_PROMPT=terminal
 export AWS_SESSION_TOKEN_TTL=12h
 export AWS_CHAINED_SESSION_TOKEN_TTL=12h
 export AWS_ASSUME_ROLE_TTL=12h
 export AWS_FEDERATION_TOKEN_TTL=12h
+
 #
 # POWERLINE
 #
@@ -81,12 +78,13 @@ fi
 alias ll='ls -alF'
 alias la='ls -hA'
 alias l='ls -CF'
-alias vi='nvim'
+alias vi='vim'
 alias nomore='find ./ -iname .DS_Store -delete'
 alias ls='exa'
 alias av='aws-vault'
 alias ave='aws-vault exec'
 alias ar='assume-role'
+alias awsid='aws sts get-caller-identity'
 alias tmc='tmux -CC'
 alias tma='tmux -CC attach'
 
@@ -128,11 +126,13 @@ function s() {
     bundle exec stax $*
   )
 }
+function awsrole() {
+    assume-role $1 $2
+    export AWS_PROFILE=$(echo ${1}-${2})
+    export DEFAULT_AWS_PROFILE=$(echo ${1}-${2})
+}
 #
 # ZSH PURE
 #
-autoload -U promptinit; promptinit
-prompt pure
-# End Profiling Code Block
-#set +x
-#exec 2>&3 3>&-
+#autoload -U promptinit; promptinit
+#prompt pure
