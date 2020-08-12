@@ -83,7 +83,6 @@ alias nomore='find ./ -iname .DS_Store -delete'
 alias ls='exa'
 alias av='aws-vault'
 alias ave='aws-vault exec'
-alias ar='assume-role'
 alias awsid='aws sts get-caller-identity'
 alias tmc='tmux -CC'
 alias tma='tmux -CC attach'
@@ -127,9 +126,9 @@ function s() {
   )
 }
 function awsrole() {
-    assume-role $1 $2
-    export AWS_PROFILE=$(echo ${1}-${2})
-    export DEFAULT_AWS_PROFILE=$(echo ${1}-${2})
+    eval $(assume-role $1)
+    export AWS_PROFILE=$(echo ${1})
+    export DEFAULT_AWS_PROFILE=$(echo ${1})
 }
 #
 # ZSH PURE
