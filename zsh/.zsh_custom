@@ -16,7 +16,7 @@ fi
 #
 # EXPORTS
 #
-export EDITOR=nvim
+export EDITOR=vim
 export BLOCKSIZE=1k
 export CLICOLOR=1
 export LSCOLORS=ExFxBxDxCxegedabagacad
@@ -42,7 +42,12 @@ export AWS_SESSION_TOKEN_TTL=12h
 export AWS_CHAINED_SESSION_TOKEN_TTL=12h
 export AWS_ASSUME_ROLE_TTL=12h
 export AWS_FEDERATION_TOKEN_TTL=12h
-
+#
+# PYTHON
+#
+export PATH="/Users/paul.seymour/.pyenv/bin:$PATH"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
 #
 # POWERLINE
 #
@@ -84,8 +89,10 @@ alias ls='exa'
 alias av='aws-vault'
 alias ave='aws-vault exec'
 alias awsid='aws sts get-caller-identity'
+alias dl='dw'
 alias tmc='tmux -CC'
 alias tma='tmux -CC attach'
+alias nnn='nnn -e'
 
 alias gc='git clone'
 alias gprune='git gc --prune=now'
@@ -125,13 +132,21 @@ function s() {
     bundle exec stax $*
   )
 }
+#function awsrole() {
+#    eval $(assume-role $1)
+#    export AWS_PROFILE=$(echo ${1})
+#    export DEFAULT_AWS_PROFILE=$(echo ${1})
+#}
 function awsrole() {
-    eval $(assume-role $1)
-    export AWS_PROFILE=$(echo ${1})
-    export DEFAULT_AWS_PROFILE=$(echo ${1})
+    tmux split-window -h \; \
+    send-keys "aws-vault exec ${1}" C-m \;
 }
 #
 # ZSH PURE
 #
 #autoload -U promptinit; promptinit
 #prompt pure
+#
+# LAST STUFF HERE
+#
+set -o emacs
