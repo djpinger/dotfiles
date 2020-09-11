@@ -479,12 +479,26 @@
 			<key>Text</key>
 			<string></string>
 		</dict>
+		<key>0xf729-0x0</key>
+		<dict>
+			<key>Action</key>
+			<integer>11</integer>
+			<key>Text</key>
+			<string>0x01</string>
+		</dict>
 		<key>0xf729-0x100000</key>
 		<dict>
 			<key>Action</key>
 			<integer>5</integer>
 			<key>Text</key>
 			<string></string>
+		</dict>
+		<key>0xf72b-0x0</key>
+		<dict>
+			<key>Action</key>
+			<integer>11</integer>
+			<key>Text</key>
+			<string>0x05</string>
 		</dict>
 		<key>0xf72b-0x100000</key>
 		<dict>
@@ -574,7 +588,7 @@
 	<key>NSWindow Frame NSColorPanel</key>
 	<string>0 130 224 275 0 0 2560 1417 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>12 114 1265 1292 0 0 2560 1417 </string>
+	<string>0 47 2560 1370 0 0 2560 1417 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>1144 179 1153 680 0 0 2560 1417 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
@@ -1885,7 +1899,7 @@
 	<key>NoSyncInstallationId</key>
 	<string>74C0D722-9AE0-44A2-9FBD-987603F1116C</string>
 	<key>NoSyncLaunchExperienceControllerRunCount</key>
-	<integer>78</integer>
+	<integer>80</integer>
 	<key>NoSyncNeverRemindPrefsChangesLostForFile</key>
 	<true/>
 	<key>NoSyncNeverRemindPrefsChangesLostForFile_selection</key>
@@ -2688,7 +2702,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2020-08-27T14:44:19Z</date>
+	<date>2020-09-09T14:45:06Z</date>
 	<key>SUSendProfileInfo</key>
 	<false/>
 	<key>SoundForEsc</key>

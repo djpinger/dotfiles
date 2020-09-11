@@ -132,15 +132,16 @@ function s() {
     bundle exec stax $*
   )
 }
-#function awsrole() {
-#    eval $(assume-role $1)
-#    export AWS_PROFILE=$(echo ${1})
-#    export DEFAULT_AWS_PROFILE=$(echo ${1})
-#}
 function awsrole() {
-    tmux split-window -h \; \
-    send-keys "aws-vault exec ${1}" C-m \;
+    unset AWS_VAULT
+    eval $(aws-vault exec $1 -- env | grep ^AWS_ | sed -e 's/^/export\ /')
+    export AWS_PROFILE=${1}
+    export DEFAULT_AWS_PROFILE=${1}
 }
+#function awsrole() {
+#    tmux split-window -h \; \
+#    send-keys "aws-vault exec ${1}" C-m \;
+#}
 #
 # ZSH PURE
 #
