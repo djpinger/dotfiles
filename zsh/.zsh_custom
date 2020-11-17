@@ -1,6 +1,7 @@
 #
 # MAIN
 #
+unset AWS_PROFILE
 export PATH=~/.rbenv/shims:~/bin:/usr/local/opt/terraform@0.11/bin:/usr/local/bin:/usr/local/sbin:~/bin:/usr/local/Cellar:/usr/local/opt/coreutils/libexec/gnubin:$PATH
 eval `keychain --eval --agents ssh --inherit any id_rsa pauls.pem`
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
@@ -101,6 +102,7 @@ alias gcd='git fetch && git checkout develop && git pull'
 alias gcm='git fetch && git checkout master && git pull'
 alias gp='git pull'
 alias gitgraph='git log --graph --abbrev-commit --pretty=oneline origin..master'
+alias gco='git checkout'
 
 alias dcup='docker-compose up -d'
 alias dcstop='docker-compose stop'
@@ -111,6 +113,9 @@ alias dcbuild='docker-compose build'
 alias dcvi='vi docker-compose.yml'
 alias dcpull='docker-compose pull'
 alias dc='docker-compose'
+
+alias top='bpytop'
+alias cda='cd ~/g/arcadia'
 #
 # FUNCTIONS
 #
